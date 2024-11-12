@@ -5,8 +5,6 @@
   details: "5E, min. 3 players",
   titleBackground: none,
 
-  font: "Source Sans Pro",
-
   body
 ) = {
   // Setup
@@ -53,7 +51,7 @@
   set document(title: title)
   set page(numbering: "1", number-align: center)
 
-  set text(font: font, lang: "en", size: 12pt)
+  set text(font: "Bookinsanity Remake", lang: "en", size: 12pt)
 
   set par(spacing: 1.2em)
 
@@ -163,7 +161,7 @@
 
   // Global settings
   set par(justify: true)
-  set text(hyphenate: false, font: "Bookinsanity Remake")
+  set text(hyphenate: false)
   set list(marker: ([•], [◦], [‣], [⁃]))
 
   show heading: set text(fill: headingColour, font: "Mr Eaves SC Remake")
