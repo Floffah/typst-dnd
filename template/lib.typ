@@ -122,18 +122,28 @@
   )
 
   // v(4fr)
-  set page(background: none)
+  set page(background: none, fill: rgb("#fffef7"))
   pagebreak()
 
+  // Global settings
+  set par(justify: true)
+  set text(hyphenate: false, font: "Bookinsanity Remake")
+  set list(marker: ([•], [◦], [‣], [⁃]))
+
+  show heading: set text(fill: rgb("#7f1d1d"), font: "Mr Eaves SC Remake")
+  
   // Contents page
-  outline(depth: 3, indent: true)
+  align(center, heading("Contents", outlined: false, numbering: none))
+  v(1em)
+  columns(
+    2,
+    outline(depth: 3, indent: true, title: none)
+  )
+  
   pagebreak()
 
 
   // Main body.
-  set par(justify: true)
-  set text(hyphenate: false)
-  set list(marker: ([•], [◦], [‣], [⁃]))
   
   body
 }
