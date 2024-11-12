@@ -25,12 +25,27 @@
       v(0pt, weak: true)
     } else if it.level == 2 {
       text(it.body, 1.2em, fill: headingColour)
+      sym.space
       box(it.fill, width: 1fr)
+      sym.space
       it.page
     } else {
-      it.body
-      box(it.fill, width: 1fr)
-      it.page
+      it
+    }
+  }
+
+  show heading: it => {
+    set text(size: 2em) if it.level == 1
+    set text(size: 1.8em) if it.level == 2
+    set text(size: 1.7em) if it.level == 3
+    set text(size: 1.6em) if it.level == 4
+    
+    it
+
+    if it.level == 4 {
+      v(6pt, weak: true)
+      box(width: 1fr, line(length: 100%, stroke: rootHeadingColour))
+      v(8pt, weak: true)
     }
   }
   
