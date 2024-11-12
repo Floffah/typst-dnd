@@ -10,6 +10,29 @@
   body
 ) = {
   // Setup
+
+  let headingColour = rgb("#7f1d1d")
+  let rootHeadingColour = rgb("#eab308")
+  let pageBackgroundColour =  rgb("#fffef7")
+  
+  show outline.entry: it => {
+    if it.level == 1 {
+      text(it.body, 1.5em, fill: headingColour)
+      h(1fr)
+      it.page
+      v(6pt, weak: true)
+      box(width: 1fr, line(length: 100%, stroke: rootHeadingColour))
+      v(0pt, weak: true)
+    } else if it.level == 2 {
+      text(it.body, 1.2em, fill: headingColour)
+      box(it.fill, width: 1fr)
+      it.page
+    } else {
+      it.body
+      box(it.fill, width: 1fr)
+      it.page
+    }
+  }
   
   set document(title: title)
   set page(numbering: "1", number-align: center)
@@ -17,8 +40,6 @@
   set text(font: font, lang: "en", size: 12pt)
 
   set par(spacing: 1.2em)
-
-  set heading(numbering: "1.a.i")
 
   // Title page
 
@@ -121,8 +142,7 @@
     )
   )
 
-  // v(4fr)
-  set page(background: none, fill: rgb("#fffef7"))
+  set page(background: none, fill: pageBackgroundColour)
   pagebreak()
 
   // Global settings
@@ -130,14 +150,14 @@
   set text(hyphenate: false, font: "Bookinsanity Remake")
   set list(marker: ([•], [◦], [‣], [⁃]))
 
-  show heading: set text(fill: rgb("#7f1d1d"), font: "Mr Eaves SC Remake")
+  show heading: set text(fill: headingColour, font: "Mr Eaves SC Remake")
   
   // Contents page
   align(center, heading("Contents", outlined: false, numbering: none))
   v(1em)
   columns(
     2,
-    outline(depth: 3, indent: true, title: none)
+    outline(depth: 3, indent: 1em, title: none)
   )
   
   pagebreak()
