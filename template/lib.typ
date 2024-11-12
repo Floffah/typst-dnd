@@ -16,15 +16,16 @@
   let pageBackgroundColour =  rgb("#fffef7")
   
   show outline.entry: it => {
+    
     if it.level == 1 {
-      text(it.body, 1.5em, fill: headingColour)
+      text(it.body, 1.5em, fill: headingColour, font: "Mr Eaves SC Remake")
       h(1fr)
       it.page
       v(6pt, weak: true)
       box(width: 1fr, line(length: 100%, stroke: rootHeadingColour))
       v(0pt, weak: true)
     } else if it.level == 2 {
-      text(it.body, 1.2em, fill: headingColour)
+      text(it.body, 1.3em, fill: headingColour, font: "Mr Eaves SC Remake")
       sym.space
       box(it.fill, width: 1fr)
       sym.space
