@@ -136,6 +136,4 @@
   set list(marker: ([•], [◦], [‣], [⁃]))
   
   body
-
-  [#type(titleBackground)]
 }
