@@ -11,6 +11,6 @@ keywords = ["tabletop", "dnd", "dungeons and dragons", "character sheets", "plan
 categories = ["fun", "book", "components"]
 
 [template]
-path = "template"
+path = "universe-template"
 entrypoint = "main.typ"
 thumbnail = "thumbnail.png"
