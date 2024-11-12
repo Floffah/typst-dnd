@@ -1,0 +1,16 @@
+[package]
+name = "tabletop"
+version = "0.0.1"
+compiler = "0.12.0"
+entrypoint = "lib.typ"
+repository = "https://github.com/floffah/typst-tabletop"
+authors = ["Floffah <@ilm>"]
+license = "MIT"
+description = "Typst library and template for planning tabletop stories "
+keywords = ["tabletop", "dnd", "dungeons and dragons", "character sheets", "planning", "outline"]
+categories = ["fun", "book", "components"]
+
+[template]
+path = "template"
+entrypoint = "main.typ"
+thumbnail = "thumbnail.png"
