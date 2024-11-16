@@ -12,9 +12,9 @@
   let headingColour = rgb("#7f1d1d")
   let rootHeadingColour = rgb("#eab308")
   let pageBackgroundColour =  rgb("#fffef7")
+  let pageNumberColour = rgb("#b45309").transparentize(50%)
   
   show outline.entry: it => {
-    
     if it.level == 1 {
       text(it.body, 1.5em, fill: headingColour, font: "Mr Eaves SC Remake")
       h(1fr)
@@ -49,7 +49,7 @@
   }
   
   set document(title: title)
-  set page(numbering: "1", number-align: center)
+  set page(number-align: center)
 
   set text(font: "Bookinsanity Remake", lang: "en", size: 12pt)
 
@@ -165,6 +165,55 @@
   set list(marker: ([•], [◦], [‣], [⁃]))
 
   show heading: set text(fill: headingColour, font: "Mr Eaves SC Remake")
+
+  // Page numbering & chapter footer
+  set page(
+    footer: context {
+      let pageNumber = counter(page).at(here()).at(0) + 1
+      let evenPage = calc.rem(pageNumber, 2) == 0
+      let headings = query(
+        heading.where(level: 1, outlined: true).before(here())
+      )
+
+      let pageNumberText = text([#pageNumber], 15pt, fill: pageNumberColour, font: "Mr Eaves SC Remake")
+      let alignText = right
+
+      if (evenPage == true) {
+        alignText = left
+      }
+
+      align(
+        alignText,
+        {
+          if(evenPage) {
+            pageNumberText
+            h(1em)
+          }
+          
+          if headings.len() > 0 {
+            if (evenPage) {
+              text("|", 10pt, fill: pageNumberColour)
+              h(1em)
+            }
+            
+            let currentChapter = headings.last()
+    
+            text(upper(currentChapter.body), 10pt, fill: pageNumberColour, font: "Mr Eaves SC Remake")
+
+            if (not evenPage) {
+              h(1em)
+              text("|", 10pt, fill: pageNumberColour)
+            }
+          }
+
+          if (not evenPage) {
+            h(1em)
+            pageNumberText
+          }
+        }
+      )
+    }
+  )
   
   // Contents page
   align(center, heading("Contents", outlined: false, numbering: none))
