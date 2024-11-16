@@ -169,7 +169,7 @@
   // Page numbering & chapter footer
   set page(
     footer: context {
-      let pageNumber = counter(page).at(here()).at(0) + 1
+      let pageNumber = counter(page).at(here()).at(0)
       let evenPage = calc.rem(pageNumber, 2) == 0
       let headings = query(
         heading.where(level: 1, outlined: true).before(here())
