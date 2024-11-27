@@ -7,15 +7,18 @@
 
   body
 ) = {
+  set page(paper: "uk-quarto", margin: (x: 0.625in, y: 0.6in))
+  
   // Setup
 
   let headingColour = rgb("#7f1d1d")
   let rootHeadingColour = rgb("#eab308")
-  let pageBackgroundColour =  rgb("#fffef7")
+  let pageBackgroundColour = rgb("#fffef7")
   let pageNumberColour = rgb("#b45309").transparentize(50%)
   
   show outline.entry: it => {
     if it.level == 1 {
+      v(1em)
       text(it.body, 1.5em, fill: headingColour, font: "Mr Eaves SC Remake")
       h(1fr)
       it.page
@@ -38,6 +41,12 @@
     set text(size: 1.8em) if it.level == 2
     set text(size: 1.7em) if it.level == 3
     set text(size: 1.6em) if it.level == 4
+
+    if it.level == 1 {
+      pagebreak(weak: true)
+    }
+
+    v(1em, weak: true)
     
     it
 
@@ -161,7 +170,7 @@
 
   // Global settings
   set par(justify: true)
-  set text(hyphenate: false)
+  set text(hyphenate: false, size: 12pt)
   set list(marker: ([•], [◦], [‣], [⁃]))
 
   show heading: set text(fill: headingColour, font: "Mr Eaves SC Remake")
@@ -227,6 +236,8 @@
 
 
   // Main body.
+
+  show link: set text(fill: headingColour)
   
   body
 }
