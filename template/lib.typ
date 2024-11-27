@@ -232,7 +232,7 @@
       let page-number-of-chapter-heading = none
 
       if headings.len() > 0 {
-        page-number-of-chapter-heading = counter(page).at(headings.at(0).location()).at(0)
+        page-number-of-chapter-heading = counter(page).at(headings.last().location()).at(0)
       }
 
       align(
