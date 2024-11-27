@@ -1,87 +1,44 @@
-#let project(
+#let heading-color = rgb("#7f1d1d")
+#let root-heading-color = rgb("#eab308")
+#let background-colour = rgb("#fffef7")
+#let footer-colour = rgb("#b45309").transparentize(50%)
+
+// A dungeons and dragons corebook-style home page
+// Not the template, will not work if called with .with
+#let dnd-title-page(
+  // The title to show
   title: "",
+  // (subtitle, brand-name). The official books use ("D&D", "Dungeons & Dragons")
+  // Optional, can omit brand name too
   brand: ("Homebrew", "My Homebrew Campaign"),
 
+  // The details portion at the bottom of the screen
   details: "5E, min. 3 players",
-  titleBackground: none,
 
-  body
+  // Background content to use
+  // String path to image or any content
+  background: none,
 ) = {
-  set page(paper: "uk-quarto", margin: (x: 0.625in, y: 0.6in))
-  
-  // Setup
-
-  let headingColour = rgb("#7f1d1d")
-  let rootHeadingColour = rgb("#eab308")
-  let pageBackgroundColour = rgb("#fffef7")
-  let pageNumberColour = rgb("#b45309").transparentize(50%)
-  
-  show outline.entry: it => {
-    if it.level == 1 {
-      v(1em)
-      text(it.body, 1.5em, fill: headingColour, font: "Mr Eaves SC Remake")
-      h(1fr)
-      it.page
-      v(6pt, weak: true)
-      box(width: 1fr, line(length: 100%, stroke: rootHeadingColour))
-      v(0pt, weak: true)
-    } else if it.level == 2 {
-      text(it.body, 1.3em, fill: headingColour, font: "Mr Eaves SC Remake")
-      sym.space
-      box(it.fill, width: 1fr)
-      sym.space
-      it.page
-    } else {
-      it
-    }
+  // convert a path to an image
+  if (background != none and type(background) == "string") {
+    background = image(background, fit: "cover", width: 100%, height: 100%)
   }
 
-  show heading: it => {
-    set text(size: 2em) if it.level == 1
-    set text(size: 1.8em) if it.level == 2
-    set text(size: 1.7em) if it.level == 3
-    set text(size: 1.6em) if it.level == 4
+  set page(background: background)
+  set par(justify: false)
 
-    if it.level == 1 {
-      pagebreak(weak: true)
-    }
-
-    v(1em, weak: true)
-    
-    it
-
-    if it.level == 4 {
-      v(6pt, weak: true)
-      box(width: 1fr, line(length: 100%, stroke: rootHeadingColour))
-      v(8pt, weak: true)
-    }
-  }
-  
-  set document(title: title)
-  set page(number-align: center)
-
-  set text(font: "Bookinsanity Remake", lang: "en", size: 12pt)
-
-  set par(spacing: 1.2em)
-
-  // Title page
-
-  if (titleBackground != none and type(titleBackground) == "string") {
-    titleBackground = image(titleBackground, fit: "cover", width: 100%, height: 100%)
-  }
-  
-  set page(background: titleBackground)
-
-  let smallBrand = "Homebrew"
+  // Get subtitle or apply default
+  let subtitle = "Homebrew"
 
   if brand != none and brand.len() > 0 {
-    smallBrand = brand.at(0)
+    subtitle = brand.at(0)
   }
-  
+
+  // Subtitle text
   align(
     center, 
     text(
-      smallBrand,
+      subtitle,
       3em,
       weight: 600,
       stroke: black + 1pt,
@@ -90,6 +47,7 @@
       font: "Nodesto Caps"
     )
   )
+  // Title
   v(1em, weak: true)
   align(
     center, 
@@ -103,6 +61,7 @@
       tracking: -5pt,
     )
   )
+  // Title underline
   v(1em, weak:true)
   align(
     center,
@@ -124,7 +83,9 @@
 
   v(1fr)
 
+  // Brand region
   if brand != none and brand.len() >= 2 {
+    // Brand background
     place(
       left,
       dx: -2.5cm,
@@ -132,6 +93,7 @@
       image("./brand-background.png", width: 25em)
     )
 
+    // Brand text
     place(
       left,
       dx: -2.5cm,
@@ -152,6 +114,7 @@
     )
   }
 
+  // Details text
   align(
     center,
     text(
@@ -161,63 +124,148 @@
       weight: 600,
       fill: white,
       stroke: black + 1.05pt,
-      tracking: -1pt
+      tracking: -1pt,
     )
   )
+}
 
-  set page(background: none, fill: pageBackgroundColour)
-  pagebreak()
+// Dungeons and dragons styling and title page for Typst
+// Use with .with like `#show: dnd-template.with(...)`
+#let dnd-template(
+  // Document title
+  title: "",
+  // (subtitle, brand-name). The official books use ("D&D", "Dungeons & Dragons")
+  // Optional, can omit brand name too
+  brand: ("Homebrew", "My Homebrew Campaign"),
 
-  // Global settings
-  set par(justify: true)
-  set text(hyphenate: false, size: 12pt)
+  // The details portion at the bottom of the screen
+  details: "5E, min. 3 players",
+  // Background content to use
+  // String path to image or any content
+  title-background: none,
+
+  // Document content
+  body
+) = {
+  // Set page size
+  set page(paper: "uk-quarto", margin: (x: 0.625in, y: 0.6in))
+
+  // Style table of contents
+  show outline.entry: it => {
+    if it.level == 1 {
+      v(1em)
+      text(it.body, 1.5em, fill: heading-color, font: "Mr Eaves SC Remake") // Heading
+      h(1fr) // Fill remaining space to align pagenum right
+      it.page // page number
+      v(6pt, weak: true)
+      box(width: 1fr, line(length: 100%, stroke: root-heading-color)) // underline
+      v(0pt, weak: true)
+    } else if it.level == 2 {
+      text(it.body, 1.3em, fill: heading-color, font: "Mr Eaves SC Remake") // heading
+      sym.space
+      box(it.fill, width: 1fr) // Fill empty space with repeating periods
+      sym.space
+      it.page // page number
+    } else {
+      it
+    }
+  }
+
+  // Style headings
+  show heading: it => {
+    set text(size: 2em) if it.level == 1
+    set text(size: 1.8em) if it.level == 2
+    set text(size: 1.7em) if it.level == 3
+    set text(size: 1.6em) if it.level == 4
+
+    // Ensure all chapters start on their own page
+    if it.level == 1 {
+      pagebreak(weak: true)
+    }
+
+    v(1em, weak: true)
+    
+    it
+
+    // Give level 4 headings and underline
+    if it.level == 4 {
+      v(6pt, weak: true)
+      box(width: 1fr, line(length: 100%, stroke: root-heading-color))
+      v(8pt, weak: true)
+    }
+  }
+
+  // Setup document content
+  set document(title: title)
+  set page(number-align: center, background: none, fill: background-colour)
+  
+  set text(font: "Bookinsanity Remake", lang: "en", size: 12pt, hyphenate: false)
+  show link: set text(fill: heading-color)
+  show heading: set text(fill: heading-color, font: "Mr Eaves SC Remake")
+  
+  set par(spacing: 1.2em, justify: true)
   set list(marker: ([•], [◦], [‣], [⁃]))
 
-  show heading: set text(fill: headingColour, font: "Mr Eaves SC Remake")
+  // Title page
+  dnd-title-page(title: title, brand: brand, details: details, background: title-background)
+  pagebreak()
 
   // Page numbering & chapter footer
   set page(
     footer: context {
-      let pageNumber = counter(page).at(here()).at(0)
-      let evenPage = calc.rem(pageNumber, 2) == 0
+      // get context
+      let page-number = counter(page).at(here()).at(0)
+      let is-even-page = calc.rem(page-number, 2) == 0
       let headings = query(
         heading.where(level: 1, outlined: true).before(here())
       )
 
-      let pageNumberText = text([#pageNumber], 15pt, fill: pageNumberColour, font: "Mr Eaves SC Remake")
-      let alignText = right
+      let page-number-text = text([#page-number], 15pt, fill: footer-colour, font: "Mr Eaves SC Remake")
+      let footer-alignment = right
 
-      if (evenPage == true) {
-        alignText = left
+      // make sure pages alternate in alignment
+      if (is-even-page == true) {
+        footer-alignment = left
+      }
+
+      // get page number that the heading is on
+      let page-number-of-chapter-heading = none
+
+      if headings.len() > 0 {
+        page-number-of-chapter-heading = counter(page).at(headings.at(0).location()).at(0)
       }
 
       align(
-        alignText,
+        footer-alignment,
         {
-          if(evenPage) {
-            pageNumberText
+          if is-even-page {
+            page-number-text
             h(1em)
           }
-          
-          if headings.len() > 0 {
-            if (evenPage) {
-              text("|", 10pt, fill: pageNumberColour)
+
+          // if this footer is within a chapter & its not on the same page, show chapter name
+          if headings.len() > 0 and page-number-of-chapter-heading != page-number {
+            // paste preceding chapter separator on even pages
+            if is-even-page {
+              text("|", 10pt, fill: footer-colour)
               h(1em)
             }
-            
-            let currentChapter = headings.last()
-    
-            text(upper(currentChapter.body), 10pt, fill: pageNumberColour, font: "Mr Eaves SC Remake")
 
-            if (not evenPage) {
+            // get chapter & write it to the page
+            let chapter = headings.last()
+            text(upper(chapter.body), 10pt, fill: footer-colour, font: "Mr Eaves SC Remake")
+
+            // paste succeeding chapter separator on even pages
+            if not is-even-page {
               h(1em)
-              text("|", 10pt, fill: pageNumberColour)
+              text("|", 10pt, fill: footer-colour)
             }
           }
 
-          if (not evenPage) {
+          // paste page number text right on odd pages
+          if not is-even-page {
             h(1em)
-            pageNumberText
+            page-number-text
           }
         }
       )
@@ -235,9 +283,6 @@
   pagebreak()
 
 
-  // Main body.
-
-  show link: set text(fill: headingColour)
-  
+  // Main body
   body
 }
