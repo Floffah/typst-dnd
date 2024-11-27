@@ -1,9 +1,9 @@
 #import "@preview/typst-tabletop:0.0.1": *
 
-#show: project.with(
+#show: dnd-template.with(
   title: "Campaign",
 
-  titleBackground: "../assets/cover.png"
+  title-background: "../assets/cover.png"
 )
 
 = Brief
