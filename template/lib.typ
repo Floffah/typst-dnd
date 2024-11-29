@@ -210,6 +210,16 @@
   // String path to image or any content
   title-background: none,
 
+  // The corebook style to use.
+  // Possible values:
+  // - 2014: less clean, more depth
+  //  E.g. 2014 player handbook
+  //  Underlined chapter headings in outline, multiple layers of heading depth
+  // - 2020: cleaner, less depth
+  //  E.g. 2020 Monsters of the Multiverse
+  //  Much easier to read outline but less depth to the headings
+  style: "2014",
+
   // Document content
   body
 ) = {
@@ -218,22 +228,37 @@
 
   // Style table of contents
   show outline.entry: it => {
-    if it.level == 1 {
-      v(1em)
-      text(it.body, 1.5em, fill: heading-color, font: "Mr Eaves SC Remake") // Heading
-      h(1fr) // Fill remaining space to align pagenum right
-      it.page // page number
-      v(6pt, weak: true)
-      box(width: 1fr, line(length: 100%, stroke: root-heading-color)) // underline
-      v(0pt, weak: true)
-    } else if it.level == 2 {
-      text(it.body, 1.3em, fill: heading-color, font: "Mr Eaves SC Remake") // heading
-      sym.space
-      box(it.fill, width: 1fr) // Fill empty space with repeating periods
-      sym.space
-      it.page // page number
-    } else {
-      it
+    // 2014 STYLE
+    if style == "2014" {
+      if it.level == 1 {
+        v(1em)
+        text(it.body, 1.5em, fill: heading-color, font: "Mr Eaves SC Remake") // Heading
+        h(1fr) // Fill remaining space to align pagenum right
+        it.page // page number
+        v(6pt, weak: true)
+        box(width: 1fr, line(length: 100%, stroke: root-heading-color)) // underline
+        v(0pt, weak: true)
+      } else if it.level == 2 {
+        text(it.body, 1.3em, fill: heading-color, font: "Mr Eaves SC Remake") // heading
+        sym.space
+        box(it.fill, width: 1fr) // Fill empty space with repeating periods
+        sym.space
+        it.page // page number
+      } else {
+        it
+      }
+    } else if style == "2020" {
+      // 2020 STYLE
+      if it.level == 1 {
+        text(it.body, 1.3em, fill: heading-color, font: "Bookinsanity Remake", weight: 600) // heading
+        sym.space
+        box(it.fill, width: 1fr) // Fill empty space with repeating periods
+        sym.space
+        it.page // page number
+      } else {
+        h(-1em)
+        it
+      }
     }
   }
 
@@ -263,7 +288,11 @@
 
   // Setup document content
   set document(title: title)
-  set page(number-align: center, background: none, fill: background-colour)
+  set page(number-align: center, background: none)
+
+  if style == "2014" {
+    set page(fill: background-colour)
+  }
   
   set text(font: "Bookinsanity Remake", lang: "en", size: 12pt, hyphenate: false)
   show link: set text(fill: heading-color)
