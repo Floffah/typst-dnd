@@ -2,6 +2,7 @@
 #let root-heading-color = rgb("#eab308")
 #let background-colour = rgb("#fffef7")
 #let footer-colour = rgb("#b45309").transparentize(50%)
+#let dialog-line-colour = rgb("#854d0e")
 
 // A dungeons and dragons corebook-style home page
 // Not the template, will not work if called with .with
@@ -127,6 +128,71 @@
       tracking: -1pt,
     )
   )
+}
+
+#let dialog-block(body) = context {
+  let circle-radius = 2pt
+  
+  let content_box = box(
+    fill: black.transparentize(95%),
+    inset: 12.5pt,
+    width: 100%,
+    body
+  )
+  let content-box-measurements = measure(body)
+  let box-height = content-box-measurements.height + 25pt
+
+  let dialog-circle = circle(
+    radius: circle-radius,
+    fill: dialog-line-colour
+  )
+  
+  box({
+    // circle top left
+    place(
+      dialog-circle,
+      dy: -circle-radius,
+      dx: -circle-radius
+    )
+    // line left
+    place(
+      line(
+        start: (0pt, 0pt), 
+        end: (0pt, box-height),
+        stroke: 1.5pt + dialog-line-colour,
+      )
+    )
+    // circle bottom left
+    place(
+      dialog-circle,
+      dy: box-height - circle-radius,
+      dx: -circle-radius
+    )
+
+    // circle top right
+    place(
+      dialog-circle,
+      dy: -circle-radius,
+      dx: 100% - circle-radius
+    )
+    // line right
+    place(
+      line(
+        start: (0pt, 0pt), 
+        end: (0pt, box-height),
+        stroke: 1.5pt + dialog-line-colour,
+      ),
+      dx: 100%
+    )
+    // circle bottom right
+    place(
+      dialog-circle,
+      dy: box-height - circle-radius,
+      dx: 100% - circle-radius
+    )
+    
+    content_box
+  })
 }
 
 // Dungeons and dragons styling and title page for Typst
