@@ -131,67 +131,67 @@
 }
 
 #let dialog-block(body) = context {
-  let circle-radius = 2pt
+  layout(size => {
+    let circle-radius = 2pt
   
-  let content_box = box(
-    fill: black.transparentize(95%),
-    inset: 12.5pt,
-    width: 100%,
-    body
-  )
-  let content-box-measurements = measure(body)
-  let box-height = content-box-measurements.height + 25pt
-
-  let dialog-circle = circle(
-    radius: circle-radius,
-    fill: dialog-line-colour
-  )
+    let content_box = box(
+      fill: black.transparentize(90%),
+      inset: 12.5pt,
+      body
+    )
+    let (height: box-height,) = measure(content_box, width: size.width)
   
-  box({
-    // circle top left
-    place(
-      dialog-circle,
-      dy: -circle-radius,
-      dx: -circle-radius
-    )
-    // line left
-    place(
-      line(
-        start: (0pt, 0pt), 
-        end: (0pt, box-height),
-        stroke: 1.5pt + dialog-line-colour,
-      )
-    )
-    // circle bottom left
-    place(
-      dialog-circle,
-      dy: box-height - circle-radius,
-      dx: -circle-radius
-    )
-
-    // circle top right
-    place(
-      dialog-circle,
-      dy: -circle-radius,
-      dx: 100% - circle-radius
-    )
-    // line right
-    place(
-      line(
-        start: (0pt, 0pt), 
-        end: (0pt, box-height),
-        stroke: 1.5pt + dialog-line-colour,
-      ),
-      dx: 100%
-    )
-    // circle bottom right
-    place(
-      dialog-circle,
-      dy: box-height - circle-radius,
-      dx: 100% - circle-radius
+    let dialog-circle = circle(
+      radius: circle-radius,
+      fill: dialog-line-colour
     )
     
-    content_box
+    box({
+      // circle top left
+      place(
+        dialog-circle,
+        dy: -circle-radius,
+        dx: -circle-radius
+      )
+      // line left
+      place(
+        line(
+          start: (0pt, 0pt), 
+          end: (0pt, box-height),
+          stroke: 1.5pt + dialog-line-colour,
+        )
+      )
+      // circle bottom left
+      place(
+        dialog-circle,
+        dy: box-height - circle-radius,
+        dx: -circle-radius
+      )
+  
+      // circle top right
+      place(
+        dialog-circle,
+        dy: -circle-radius,
+        dx: 100% - circle-radius
+      )
+      // line right
+      place(
+        line(
+          start: (0pt, 0pt), 
+          end: (0pt, box-height),
+          stroke: 1.5pt + dialog-line-colour,
+        ),
+        dx: 100%
+      )
+      // circle bottom right
+      place(
+        dialog-circle,
+        dy: box-height - circle-radius,
+        dx: 100% - circle-radius
+      )
+      
+      content_box
+    })
   })
 }
 
@@ -368,7 +368,14 @@
   )
   
   // Contents page
-  align(center, heading("Contents", outlined: false, numbering: none))
+  let contents-heading = heading("Contents", outlined: false, numbering: none)
+
+  if style == "2014" {
+    align(center, contents-heading)
+  } else {
+    contents-heading
+  }
+  
   v(1em)
   columns(
     2,
