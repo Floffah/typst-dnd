@@ -21,7 +21,7 @@
   background: none,
 ) = {
   // convert a path to an image
-  if (background != none and type(background) == "string") {
+  if (background != none and type(background) == str) {
     background = image(background, fit: "cover", width: 100%, height: 100%)
   }
 
@@ -232,34 +232,35 @@
     if style == "2014" {
       if it.level == 1 {
         v(1em)
-        text(it.body, 1.5em, fill: heading-color, font: "Mr Eaves SC Remake") // Heading
+        text(it.body(), 1.5em, fill: heading-color, font: "Mr Eaves SC Remake") // Heading
         h(1fr) // Fill remaining space to align pagenum right
-        it.page // page number
+        it.page() // page number
         v(6pt, weak: true)
         box(width: 1fr, line(length: 100%, stroke: root-heading-color)) // underline
         v(0pt, weak: true)
       } else if it.level == 2 {
-        text(it.body, 1.3em, fill: heading-color, font: "Mr Eaves SC Remake") // heading
+        text(it.body(), 1.3em, fill: heading-color, font: "Mr Eaves SC Remake") // heading
         sym.space
         box(it.fill, width: 1fr) // Fill empty space with repeating periods
         sym.space
-        it.page // page number
+        it.page() // page number
       } else {
         it
       }
     } else if style == "2020" {
       // 2020 STYLE
       if it.level == 1 {
-        text(it.body, 1.3em, fill: heading-color, font: "Bookinsanity Remake", weight: 600) // heading
+        text(it.body(), 1.3em, fill: heading-color, font: "Bookinsanity Remake", weight: 600) // heading
         sym.space
         box(it.fill, width: 1fr) // Fill empty space with repeating periods
         sym.space
-        it.page // page number
+        it.page() // page number
       } else {
         h(-1em)
         it
       }
     }
+    linebreak()
   }
 
   // Style headings
