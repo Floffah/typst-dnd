@@ -130,14 +130,27 @@
   )
 }
 
-#let dialog-block(body) = context {
+#let dialog-block(
+  body
+) = context {
+    
   layout(size => {
+    // set dimensions
     let circle-radius = 2pt
+
+    // prevent box from indenting
+    let initial-first-line-indent = par.first-line-indent
+    set par(first-line-indent: 0pt)
   
     let content_box = box(
       fill: black.transparentize(90%),
       inset: 12.5pt,
-      body
+      {
+        set text(font: "Scaly Sans Remake")
+        // ensure content indents properly
+        set par(first-line-indent: initial-first-line-indent)
+        body
+      }
     )
     let (height: box-height,) = measure(content_box, width: size.width)
   
@@ -195,6 +208,66 @@
   })
 }
 
+#let note-block(
+  body
+) = context {
+    layout(size => {
+      // set dimensions
+      let polygon-triangle-dimensions = (8pt, 3pt)
+      let polygon-line-height = 1pt
+      
+      // prevent box from indenting
+      let initial-first-line-indent = par.first-line-indent
+      set par(first-line-indent: 0pt)
+    
+      let content_box = box(
+        fill: black.transparentize(90%),
+        inset: 12.5pt,
+        width: size.width,
+        {
+          set text(font: "Scaly Sans Remake")
+          // ensure text properly indents
+          set par(first-line-indent: initial-first-line-indent)
+          body
+        }
+      )
+      let (height: box-height, width: box-width) = measure(content_box, width: size.width)
+  
+      box(
+        width: size.width,
+        polygon(
+          fill: black.transparentize(20%),
+          
+  
+          (0pt, polygon-triangle-dimensions.at(1)),
+          (polygon-triangle-dimensions.at(0), 0pt),
+          (polygon-triangle-dimensions.at(0), polygon-triangle-dimensions.at(1) - polygon-line-height),
+          (box-width - polygon-triangle-dimensions.at(0), polygon-triangle-dimensions.at(1) - polygon-line-height),
+          (box-width - polygon-triangle-dimensions.at(0), 0pt),
+          (box-width, polygon-triangle-dimensions.at(1))
+        )
+      )
+
+      v(0pt, weak: true)
+      content_box
+      v(0pt, weak: true)
+  
+      box(
+        width: size.width,
+        polygon(
+          fill: black.transparentize(20%),
+          
+          (0pt, 0pt),
+          (polygon-triangle-dimensions.at(0), polygon-triangle-dimensions.at(1)),
+          (polygon-triangle-dimensions.at(0), polygon-line-height),
+          (box-width - polygon-triangle-dimensions.at(0), polygon-line-height),
+          (box-width - polygon-triangle-dimensions.at(0), polygon-triangle-dimensions.at(1)),
+          (box-width, 0pt)
+        )
+      )
+    })
+}
+
 // Dungeons and dragons styling and title page for Typst
 // Use with .with like `#show: dnd-template.with(...)`
 #let dnd-template(
@@ -206,9 +279,15 @@
 
   // The details portion at the bottom of the screen
   details: "5E, min. 3 players",
-  // Background content to use
+  // Background content to use on the title page
   // String path to image or any content
   title-background: none,
+  // Background content to use for the rest of the document
+  // String path to image or any content
+  background: none,
+  // Whether to set the background to a parchment-like image - if true, overrides background option
+  // Boolean
+  parchment: false,
 
   // The corebook style to use.
   // Possible values:
@@ -225,7 +304,7 @@
 ) = {
   // Set page size
   set page(paper: "uk-quarto", margin: (x: 0.625in, y: 0.6in))
-
+  
   // Style table of contents
   show outline.entry: it => {
     // 2014 STYLE
@@ -238,12 +317,18 @@
         v(6pt, weak: true)
         box(width: 1fr, line(length: 100%, stroke: root-heading-color)) // underline
         v(0pt, weak: true)
+        linebreak()
       } else if it.level == 2 {
-        text(it.body(), 1.3em, fill: heading-color, font: "Mr Eaves SC Remake") // heading
-        sym.space
-        box(it.fill, width: 1fr) // Fill empty space with repeating periods
-        sym.space
-        it.page() // page number
+        it.indented(
+          {
+            text(it.body(), 1.3em, fill: heading-color, font: "Mr Eaves SC Remake") // heading
+            sym.space
+            box(it.fill, width: 1fr) // Fill empty space with repeating periods
+            sym.space
+            it.page() // page number
+          }, 
+          it.prefix()
+        )
       } else {
         it
       }
@@ -255,12 +340,11 @@
         box(it.fill, width: 1fr) // Fill empty space with repeating periods
         sym.space
         it.page() // page number
+        v(0pt)
       } else {
-        h(-1em)
         it
       }
     }
-    linebreak()
   }
 
   // Style headings
@@ -367,6 +451,19 @@
       )
     }
   )
+
+  // convert a path to an image
+  if (background != none and type(background) == str) {
+    background = image(background, fit: "cover", width: 100%, height: 100%)
+  }
+
+  // or use parchment if set
+  if (parchment) {
+    background = image("parchment.jpg", fit: "cover", width: 100%, height: 100%)
+  }
+
+  set page(background: background)
+
   
   // Contents page
   let contents-heading = heading("Contents", outlined: false, numbering: none)
@@ -378,12 +475,25 @@
   }
   
   v(1em)
+
+  // the different styles have different indents in the outline
+  // typst 0.13 overrides these, we need to manually set them
+  let outline_indent = 0pt;
+
+  if style == "2014" {
+    outline_indent = 1em
+  } else if style == "2020" {
+    outline_indent = n => calc.max(0, n - 1) * 1.5em
+  }
+  
   columns(
     2,
-    outline(depth: 3, indent: 1em, title: none)
+    outline(depth: 3, indent: outline_indent, title: none)
   )
   
   pagebreak()
+
+  set par(first-line-indent: 10pt, spacing: 9pt)
 
 
   // Main body
